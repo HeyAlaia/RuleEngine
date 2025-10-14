@@ -1,0 +1,46 @@
+server:
+  port: 19992
+  servlet:
+    context-path: /admin
+spring:
+  data:
+    redis:
+      host: eport-redis
+      database: 0
+  # 数据库相关配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: root
+      url: jdbc:mysql://eport-mysql:3306/init_boot?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&nullCatalogMeansCurrent=true&allowPublicKeyRetrieval=true
+  # 缓存相关配置
+  cache:
+    type: redis
+  cloud:
+    discovery:
+      enabled: false
+    nacos:
+      config.enabled: false
+      discovery.enabled: false
+    gateway:
+      server.webflux:
+        enabled: false
+        redis.enabled: false
+    sentinel.enabled: false
+    openfeign.okhttp.enabled: true
+  main:
+    allow-bean-definition-overriding: true
+
+eport:
+  client:
+    baseUrl: http://192.168.1.190/auth/admin
+    privateKey: MIICcwIBADANBgkqhkiG9w0BAQEFAASCAl0wggJZAgEAAoGBAO+I+7qXff2gX7BLheQkZseYKvn8WEX6xQs2+z8WfyH9mrcxERiKv15v2DoJ7D9Nz6JKitmznVCkq/X4sBLXvLLJoODRxr0GDM+zwp/bvZ18uVIBZ56jZT/VFi9V3pNSGg+/rVcMlT3tF8y2/Fzo4yWRSEegBZrC4256Mbp4YttxAgMBAAECf07QiANuTLmE8bL2ng7zHnf0bvxrvp/QhXyaGqrSGgK3RI7PFj/jZ0dvuM9f/P4KgqUOWV03TWEy78hMAviWnUO1vQeuLr0/5apV4LmzfzioU49q+G5diFKsaPtr0FDKemce/n9If6etub/nTFoOCEUpn5Cze0odNl9bi8RRU/kCQQD9s5Xd8IicR2sWXsTrw/+SDHvMEE5IITLkpSVbrNvF8zh5kvHmJ7H1P8UnNi+aLwyMUGdEcvkDUU9NB4w0lfwdAkEA8bSKneQgDeCZS88N9Ua+XyIYU/GOJUdt3uqjxBwG9QW7nqdbfl/BHxu3pOci0B6YekzjhnxFkq++a098/Rq0ZQJAS6Y/K/zLX35USklcAslg7dXXHFRIY22y1UcBSsLSjcYmsunEQ9LWV8D6MuUPcLRS04wuHtUBt6GJOfjkL9IBaQJAYeOKmDOBv90MeKVcs8943jKCw8x6kyKAnt1MgeoP7z/pInIJHf9NyXmCQKjTcpJRkoZ9R0QhMS0342IH7sHX+QJABpiB+87TG+eMeadDMLdrpNX+FOquSSWTE4yTz9UVeE3SAZcKXG1r91/nYnZOdaC0jdQeY6XD6JOXJUpAgx3Mbg==
+    redirectUri: http://localhost:8888/login
+    configLocation: C:\key\example\cryptoContent.key
+
+rule:
+  loader:
+    local:
+      path: "classpath:rules/"

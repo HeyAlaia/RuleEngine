@@ -1,0 +1,36 @@
+package rules.engine.set.ruleset1
+import com.alibaba.fastjson.JSONObject
+
+rule "r_text_exist_1"
+when
+    $fact:JSONObject(getString("text") != null)
+then
+    System.out.println("车号为: " + $fact.getString("text"));
+end
+
+
+rule "r_text_exist_3"
+when
+    $fact:JSONObject(getInteger("weight") != null && getInteger("weight") >= 60)
+then
+    $fact.put("overweight", 1);
+    System.out.println("该车超重");
+end
+
+
+rule "r_text_exist_4"
+when
+    $fact:JSONObject(getString("hasGood") != null && getString("hasGood").equals("0"))
+then
+    $fact.put("not_good", 1);
+    System.out.println("该车无货");
+end
+
+
+rule "r_text_not_in_1"
+when
+    $fact:JSONObject(getString("passd") == null)
+then
+    $fact.put("passd", 1);
+    System.out.println("该车无法正确出车");
+end

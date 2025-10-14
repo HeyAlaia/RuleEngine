@@ -1,0 +1,47 @@
+package com.eport.daemon.rule.engine;
+
+import com.eport.daemon.rule.common.EngineSourceType;
+import com.eport.daemon.rule.common.EngineType;
+import com.eport.daemon.rule.engine.impl.DroolsRuleEngine;
+import com.eport.daemon.rule.storage.RuleLoader;
+import com.eport.daemon.rule.storage.impl.LocalRuleLoader;
+import com.eport.daemon.rule.storage.impl.RedisRuleLoader;
+import jakarta.annotation.Resource;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import java.util.Objects;
+
+/**
+ * @Author: Alaia
+ * @Description: 规则引擎工厂类
+ **/
+@Component
+public class RuleEngineFactory {
+
+    @Lazy
+    @Resource
+    private RedisRuleLoader redisRuleLoader;
+
+    @Lazy
+    @Resource
+    private LocalRuleLoader localRuleLoader;
+
+
+    public RuleEngine createRuleEngine(EngineType engineType, EngineSourceType engineSourceType) {
+        if (Objects.requireNonNull(engineType) == EngineType.DROOLS) {
+            return new DroolsRuleEngine().setRuleLoader(checkSource(engineSourceType));
+        }
+        throw new IllegalStateException("未知的规则引擎类型, 无法创建.");
+    }
+
+    private RuleLoader checkSource(EngineSourceType engineSourceType) {
+        if (Objects.requireNonNull(engineSourceType) == EngineSourceType.REDIS) {
+            return redisRuleLoader;
+        }else if (Objects.requireNonNull(engineSourceType) == EngineSourceType.LOCAL) {
+            return localRuleLoader;
+        }
+        throw new IllegalStateException("未知的规则引擎加载类型, 无法创建.");
+    }
+}
+
