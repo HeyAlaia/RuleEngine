@@ -43,4 +43,4 @@ eport:
 rule:
   loader:
     local:
-      path: "classpath:rules/"
+      path: "classpath:rules/liteflow/"

@@ -108,13 +108,9 @@ public class DroolsRuleEngine extends AbstractRuleEngine {
                 .setDefault(true);
 
         KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
-        List<Rule> rules = ruleSet.getRules();
-
-        for (Rule rule : rules) {
-            String fullPath = String.format("src/main/resources/ruleset/" + ruleSet.getTopic() + "/rule_%s.drl", rule.getRuleId());
-            kieFileSystem.write(fullPath, rule.getRuleContent());
-            kieFileSystem.writeKModuleXML(kieModuleModel.toXML());
-        }
+        String fullPath = String.format("src/main/resources/ruleset/" + ruleSet.getTopic() + "/rule_%s.drl", ruleSet.getRuleSetKey());
+        kieFileSystem.write(fullPath, ruleSet.getRuleContent());
+        kieFileSystem.writeKModuleXML(kieModuleModel.toXML());
         KieBuilder kieBuilder = kieServices.newKieBuilder(kieFileSystem).buildAll();
         Results results = kieBuilder.getResults();
         if (results.hasMessages(Message.Level.ERROR)) {

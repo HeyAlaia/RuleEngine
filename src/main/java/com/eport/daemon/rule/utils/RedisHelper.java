@@ -1,5 +1,6 @@
 package com.eport.daemon.rule.utils;
 
+import com.eport.daemon.rule.pojo.RuleSet;
 import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import java.util.Set;
 public class RedisHelper {
 
     @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate redisTemplate;
 
     /**
      * 通过key获取所有的field和value
@@ -19,8 +20,8 @@ public class RedisHelper {
      * @param key
      * @return
      */
-    public Map<Object, Object> hgetAll(String key) {
-        return redisTemplate.opsForHash().entries(key);
+    public String getStringByKey(String key) {
+        return redisTemplate.opsForValue().get(key).toString();
     }
 
     /**
@@ -31,7 +32,7 @@ public class RedisHelper {
      * @param pattern
      * @return
      */
-    public Set keys(String pattern) {
+    public Set<String> keys(String pattern) {
         return redisTemplate.keys(pattern);
     }
 

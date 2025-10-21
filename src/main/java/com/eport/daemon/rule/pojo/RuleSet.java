@@ -22,6 +22,6 @@ import java.util.List;
 public class RuleSet {
     private String topic;
     private String ruleSetKey;
-    private Integer ruleSetCount;
-    private List<Rule> rules;
+    private String ruleContent;
+    private Boolean base64;
 }

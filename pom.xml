@@ -116,6 +116,13 @@
             <artifactId>drools-mvel</artifactId>
             <version>10.1.0</version>
         </dependency>
+        <!-- https://liteflow.cc/pages/9bf6be/ -->
+        <dependency>
+            <groupId>com.yomahub</groupId>
+            <artifactId>liteflow-spring-boot-starter</artifactId>
+            <version>2.15.0.2</version>
+        </dependency>
+
     </dependencies>
 
     <profiles>

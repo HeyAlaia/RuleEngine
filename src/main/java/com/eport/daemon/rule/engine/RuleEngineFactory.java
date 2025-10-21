@@ -3,14 +3,16 @@ package com.eport.daemon.rule.engine;
 import com.eport.daemon.rule.common.EngineSourceType;
 import com.eport.daemon.rule.common.EngineType;
 import com.eport.daemon.rule.engine.impl.DroolsRuleEngine;
+import com.eport.daemon.rule.engine.impl.LiteFlowRuleEngine;
 import com.eport.daemon.rule.storage.RuleLoader;
 import com.eport.daemon.rule.storage.impl.LocalRuleLoader;
 import com.eport.daemon.rule.storage.impl.RedisRuleLoader;
 import jakarta.annotation.Resource;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author: Alaia
@@ -27,10 +29,11 @@ public class RuleEngineFactory {
     @Resource
     private LocalRuleLoader localRuleLoader;
 
-
     public RuleEngine createRuleEngine(EngineType engineType, EngineSourceType engineSourceType) {
         if (Objects.requireNonNull(engineType) == EngineType.DROOLS) {
             return new DroolsRuleEngine().setRuleLoader(checkSource(engineSourceType));
+        } else if (Objects.requireNonNull(engineType) == EngineType.LITEFLOW) {
+            return new LiteFlowRuleEngine().setRuleLoader(checkSource(engineSourceType));
         }
         throw new IllegalStateException("未知的规则引擎类型, 无法创建.");
     }
@@ -38,10 +41,9 @@ public class RuleEngineFactory {
     private RuleLoader checkSource(EngineSourceType engineSourceType) {
         if (Objects.requireNonNull(engineSourceType) == EngineSourceType.REDIS) {
             return redisRuleLoader;
-        }else if (Objects.requireNonNull(engineSourceType) == EngineSourceType.LOCAL) {
+        } else if (Objects.requireNonNull(engineSourceType) == EngineSourceType.LOCAL) {
             return localRuleLoader;
         }
         throw new IllegalStateException("未知的规则引擎加载类型, 无法创建.");
     }
 }
-

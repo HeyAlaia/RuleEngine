@@ -1,12 +1,12 @@
-# 🚀 Drool Quick Start
+# 🚀 Rule Engine Quick Start
 
 <div align="center">
-  
+
   ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?style=for-the-badge)
   ![Java](https://img.shields.io/badge/Java-17-orange.svg?style=for-the-badge&logo=java)
   ![Spring Boot](https://img.shields.io/badge/Spring_Boot-2.7-green.svg?style=for-the-badge&logo=spring-boot)
   ![License](https://img.shields.io/badge/license-MIT-purple.svg?style=for-the-badge)
-  
+
 </div>
 
 <p align="center">
@@ -15,7 +15,7 @@
 
 ## 📋 概述
 
-Drool Quick Start 是一个基于 Drool 规则引擎的快速开始项目。该系统能够根据预定义的规则集自动处理和验证数据流，提高数据处理效率和准确性。
+Drool Quick Start 是一个基于 Drool\liteflow 规则引擎的快速开始项目。该系统能够根据预定义的规则集自动处理和验证数据流，提高数据处理效率和准确性。
 
 ## ✨ 特性
 

@@ -3,6 +3,7 @@ package com.eport.daemon.rule.engine;
 
 import com.eport.daemon.rule.common.EngineSourceType;
 import com.eport.daemon.rule.common.EngineType;
+import com.eport.daemon.rule.storage.ReloadWatcher;
 import com.eport.daemon.rule.storage.impl.RedisRuleLoader;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Lazy;
@@ -19,6 +20,7 @@ public class RuleEngineBuilder {
     private Map<String, Object> config;
     private EngineType engineType;
     private EngineSourceType engineSourceType;
+    private ReloadWatcher reloadWatcher;
     private boolean initialize;
     
     public RuleEngineBuilder builder(){
@@ -45,9 +47,15 @@ public class RuleEngineBuilder {
         return this;
     }
 
+    public RuleEngineBuilder watch(ReloadWatcher reloadWatcher) {
+        this.reloadWatcher = reloadWatcher;
+        return this;
+    }
+
     public RuleEngine build() {
         AbstractRuleEngine ruleEngine = (AbstractRuleEngine) ruleEngineFactory.createRuleEngine(engineType, engineSourceType);
         ruleEngine.setConfig(config);
+        ruleEngine.setReloadWatcher(reloadWatcher);
         if(initialize){
             ruleEngine.init();
         }

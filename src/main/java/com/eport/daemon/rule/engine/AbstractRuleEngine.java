@@ -6,6 +6,7 @@ import com.eport.daemon.rule.storage.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @Author: Alaia
@@ -15,6 +16,7 @@ public abstract class AbstractRuleEngine implements RuleEngine {
 
     private RuleStorage ruleStorage;
     protected RuleLoader ruleLoader;
+    protected ReloadWatcher reloadWatcher;
     private volatile boolean running;
     private volatile boolean inited;
 
@@ -30,6 +32,10 @@ public abstract class AbstractRuleEngine implements RuleEngine {
     protected RuleEngine setRuleLoader(RuleLoader ruleLoader) {
         this.ruleLoader = ruleLoader;
         return this;
+    }
+
+    protected void setReloadWatcher(ReloadWatcher reloadWatcher) {
+        this.reloadWatcher = reloadWatcher;
     }
 
     protected abstract void open(Map<String, Object> config);
@@ -77,7 +83,10 @@ public abstract class AbstractRuleEngine implements RuleEngine {
         //第一次加载
         this.ruleStorage.load();
         //开启监听
-        this.ruleStorage.enableWatch(true);
+        if (Objects.nonNull(this.reloadWatcher)) {
+            this.ruleStorage.enableWatch(true);
+            this.ruleStorage.addWatcher(this.reloadWatcher);
+        }
         //开启规则引擎
         open(config);
         //运行标识修改

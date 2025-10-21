@@ -5,5 +5,6 @@ package com.eport.daemon.rule.common;
  * @Description: 规则引擎类型
  **/
 public enum EngineType {
-    DROOLS
+    DROOLS,
+    LITEFLOW,
 }

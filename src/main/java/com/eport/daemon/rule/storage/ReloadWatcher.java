@@ -1,25 +1,21 @@
 package com.eport.daemon.rule.storage;
 
 import com.eport.daemon.rule.engine.AbstractRuleEngine;
+import lombok.Setter;
 
 import java.util.Map;
 
+@Setter
 public abstract class ReloadWatcher extends Thread {
     private RuleStorage storage;
     private Map<String, Object> config;
     protected AbstractRuleEngine engine;
 
-    public void setStorage(RuleStorage storage) {
-        this.storage = storage;
-    }
-    public void setConfig(Map<String, Object> config) {
-        this.config = config;
-    }
-
-    public ReloadWatcher(RuleStorage storage, Map<String, Object> config) {
+    public ReloadWatcher(RuleStorage storage, Map<String, Object> config, AbstractRuleEngine engine) {
         this();
         this.storage = storage;
         this.config = config;
+        this.engine = engine;
     }
 
     public ReloadWatcher() {
@@ -37,9 +33,5 @@ public abstract class ReloadWatcher extends Thread {
     }
 
     public abstract void watch(RuleStorage storage, Map<String, Object> config, AbstractRuleEngine engine);
-
-    public void setEngine(AbstractRuleEngine engine) {
-        this.engine = engine;
-    }
 
 }

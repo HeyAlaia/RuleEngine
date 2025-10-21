@@ -13,10 +13,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Rule {
-    private String ruleName;
     private String ruleId;
-    private String ruleContent;
-    private String expirationTime;
-    private String effectiveTime;
-    private Boolean base64;
+
 }

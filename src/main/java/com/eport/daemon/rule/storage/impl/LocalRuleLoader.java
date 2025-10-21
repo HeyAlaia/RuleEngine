@@ -1,26 +1,23 @@
 package com.eport.daemon.rule.storage.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.core.util.StrUtil;
 import com.eport.daemon.rule.common.EngineSourceType;
-import com.eport.daemon.rule.pojo.Rule;
 import com.eport.daemon.rule.pojo.RuleSet;
 import com.eport.daemon.rule.storage.RuleLoader;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext; // 导入 ApplicationContext
-import org.springframework.context.ApplicationContextAware; // 如果需要非构造函数注入
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -38,16 +35,9 @@ public class LocalRuleLoader implements RuleLoader, ApplicationContextAware { //
 
     private ApplicationContext applicationContext; // 注入 ApplicationContext
 
-    private Map<String, RuleSet> ruleSetCache;
-
-    // 无需手动注入 ResourceLoader，因为我们可以通过 ApplicationContext 访问它
-    // 如果你坚持要注入 ResourceLoader，可以移除这个构造函数，让 Spring 使用默认构造函数并进行字段注入。
-    // 但是为了使用 getResources()，还是需要 ApplicationContext
     public LocalRuleLoader() {
-        // 这是默认构造函数，Spring 可以直接使用它
     }
 
-    // 实现 ApplicationContextAware 接口，用于设置 ApplicationContext
     @Override
     public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
@@ -56,15 +46,10 @@ public class LocalRuleLoader implements RuleLoader, ApplicationContextAware { //
     @PostConstruct
     public void init() {
         log.info("LocalRuleLoader initialized with ruleRootPath: {}", ruleRootPath);
-        this.ruleSetCache = loadRulesFromLocalPath();
     }
 
     @Override
     public Map<String, RuleSet> load() {
-        return this.ruleSetCache;
-    }
-
-    private Map<String, RuleSet> loadRulesFromLocalPath() {
         log.info("==================== 开始从 classpath 路径 [{}] 加载规则 ====================", ruleRootPath);
         Map<String, RuleSet> loadedRuleSetMap = new ConcurrentHashMap<>();
 
@@ -74,7 +59,7 @@ public class LocalRuleLoader implements RuleLoader, ApplicationContextAware { //
             // 如果 ruleRootPath 已经是文件路径，则不做修改
             String locationPattern;
             if (ruleRootPath.endsWith("/")) {
-                locationPattern = ruleRootPath + "**/*.{drl,json}";
+                locationPattern = ruleRootPath + "**/*.{drl,xml}";
             } else if (!ruleRootPath.contains("*") && !ruleRootPath.contains("?")) { // 如果是单个文件，且不含通配符
                 locationPattern = ruleRootPath;
             } else { // 如果 ruleRootPath 已经包含通配符
@@ -112,30 +97,19 @@ public class LocalRuleLoader implements RuleLoader, ApplicationContextAware { //
                     }
 
                     RuleSet ruleSet = new RuleSet();
-                    ruleSet.setTopic(topic);
+                    ruleSet.setTopic(EngineSourceType.fromString(EngineSourceType.LOCAL));
                     ruleSet.setRuleSetKey(EngineSourceType.LOCAL + topic);
-                    List<Rule> rules = new ArrayList<>();
-                    ruleSet.setRules(rules);
 
-                    if (fileName.endsWith(".drl")) {
-                        Rule rule = new Rule();
-                        rule.setRuleName(topic + " DRL Rule");
-                        rule.setRuleContent(ruleContent);
-                        rule.setBase64(false);
-                        rules.add(rule);
-                        ruleSet.setRuleSetCount(1);
-                    } else if (fileName.endsWith(".json")) {
-                        List<Rule> jsonRules = JSONObject.parseArray(ruleContent, Rule.class);
-                        rules.addAll(jsonRules);
-                        // 如果 jsonRules 可能为空，ruleSetCount 也要处理
-                        ruleSet.setRuleSetCount(jsonRules.size());
+                    if (StrUtil.isNotBlank(ruleContent)) {
+                        ruleSet.setRuleContent(ruleContent);
+                        ruleSet.setBase64(false);
                     } else {
-                        log.warn("不支持的规则文件类型: {}", fileName);
+                        log.error("文件内容为空: {}", fileName);
                         continue;
                     }
 
                     loadedRuleSetMap.put(ruleSet.getRuleSetKey(), ruleSet);
-                    log.info("加载: {}, 规则数量: {}, 来源: {}", ruleSet.getRuleSetKey(), rules.size(), res.getDescription());
+                    log.info("加载: {}, 规则数量: {}, 来源: {}", ruleSet.getRuleSetKey(), 1, res.getDescription());
 
                 } catch (IOException e) {
                     log.error("读取资源失败: {}", res.getDescription(), e);

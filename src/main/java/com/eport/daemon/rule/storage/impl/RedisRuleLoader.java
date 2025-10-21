@@ -1,9 +1,9 @@
 package com.eport.daemon.rule.storage.impl;
 
+import cn.hutool.core.codec.Base64;
 import com.alibaba.fastjson.JSONObject;
 import com.eport.daemon.rule.common.EngineSourceType;
 import com.eport.daemon.rule.common.RuleEngineConfigConsent;
-import com.eport.daemon.rule.pojo.Rule;
 import com.eport.daemon.rule.pojo.RuleSet;
 import com.eport.daemon.rule.storage.RuleLoader;
 import com.eport.daemon.rule.utils.RedisHelper;
@@ -11,8 +11,8 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -41,27 +41,19 @@ public class RedisRuleLoader implements RuleLoader {
         Map<String, RuleSet> ruleSetMap = new ConcurrentHashMap<>();
         //处理所有规则
         for (String setKey : keys) {
-            Map<Object, Object> ruleSetAll = redisHelper.hgetAll(setKey);
+            String content = redisHelper.getStringByKey(setKey);
             RuleSet ruleSet = new RuleSet();
             String topic = setKey.substring(setKey.lastIndexOf(".") + 1);
-            ruleSet.setTopic(EngineSourceType.REDIS + topic);
-            ruleSet.setRuleSetKey(setKey);
-            ruleSet.setRuleSetCount(ruleSetAll.size());
-            List<Rule> rules = new ArrayList<>();
-            ruleSet.setRules(rules);
-            for (Map.Entry<Object, Object> entry : ruleSetAll.entrySet()) {
-                String ruleJson = entry.getValue().toString();
-                Rule rule = JSONObject.parseObject(ruleJson, Rule.class);
-                //规则文件经过base64
-                if (rule.getBase64()) {
-                    String ruleContent = rule.getRuleContent();
-                    byte[] decode = Base64.getDecoder().decode(ruleContent.getBytes(StandardCharsets.UTF_8));
-                    rule.setRuleContent(new String(decode, StandardCharsets.UTF_8));
-                }
-                rules.add(rule);
+            ruleSet.setTopic(EngineSourceType.fromString(EngineSourceType.REDIS));
+            ruleSet.setRuleSetKey(EngineSourceType.REDIS + topic);
+            RuleSet rule = JSONObject.parseObject(content, RuleSet.class);
+            String ruleContent = rule.getRuleContent();
+            if (rule.getBase64()) {
+                ruleContent = Base64.decodeStr(ruleContent);
             }
-            log.info("加载: {}, 规则数量: {}", ruleSet.getRuleSetKey(), ruleSet.getRuleSetCount());
-            ruleSetMap.put(setKey, ruleSet);
+            ruleSet.setBase64(false);
+            ruleSet.setRuleContent(ruleContent);
+            ruleSetMap.put(ruleSet.getRuleSetKey(), ruleSet);
         }
         log.info("==================== 从Redis加载规则结束 ====================");
         return ruleSetMap;
