@@ -13,113 +13,117 @@
   <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Gear.png" width="100" />
 </p>
 
-## 📋 概述
+## 🌐 Language / 语言
 
-Drool Quick Start 是一个基于 Drool\liteflow 规则引擎的快速开始项目。该系统能够根据预定义的规则集自动处理和验证数据流，提高数据处理效率和准确性。
+**English** | [中文](README_CN.md)
 
-## ✨ 特性
+## 📋 Overview
 
-- 🔄 **实时数据处理**：高效处理来自各种系统的数据流
-- 🧠 **智能规则引擎**：基于可配置规则执行复杂业务逻辑
-- 🔌 **灵活集成**：与现有港口管理系统无缝集成
-- 📊 **全面监控**：详细的日志和性能指标
-- 🛡️ **高可靠性**：容错设计确保系统稳定运行
+Drool Quick Start is a rapid development project based on the Drools/LiteFlow rule engine. This system can automatically process and validate data flows according to predefined rule sets, improving data processing efficiency and accuracy.
 
-## 🛠️ 技术栈
+## ✨ Features
 
-- **Drool**：规则引擎核心
-- **Java 17**：利用最新Java特性
-- **Spring Boot**：快速开发框架
-- **Maven**：依赖管理和构建工具
-- **Docker**：容器化部署
+- 🔄 **Real-time Data Processing**: Efficiently handle data streams from various systems
+- 🧠 **Intelligent Rule Engine**: Execute complex business logic based on configurable rules
+- 🔌 **Flexible Integration**: Seamlessly integrate with existing port management systems
+- 📊 **Comprehensive Monitoring**: Detailed logging and performance metrics
+- 🛡️ **High Reliability**: Fault-tolerant design ensures stable system operation
 
-## 🚀 快速开始
+## 🛠️ Tech Stack
 
-### 前提条件
+- **Drools**: Rule engine core
+- **Java 17**: Leveraging the latest Java features
+- **Spring Boot**: Rapid development framework
+- **Maven**: Dependency management and build tool
+- **Docker**: Containerized deployment
+
+## 🚀 Quick Start
+
+### Prerequisites
 
 - JDK 17+
 - Maven 3.6+
-- Docker (可选，用于容器化部署)
+- Docker (optional, for containerized deployment)
 
-### 安装步骤
+### Installation Steps
 
-1. **克隆仓库**
+1. **Clone Repository**
 
 ```bash
 git clone https://github.com/yourusername/eport-daemon-rule-engine.git
 cd eport-daemon-rule-engine
 ```
 
-2. **构建项目**
+2. **Build Project**
 
 ```bash
 mvn clean package
 ```
 
-3. **运行应用**
+3. **Run Application**
 
 ```bash
 java -jar target/init.jar
 ```
 
-### Docker部署
+### Docker Deployment
 
 ```bash
 docker build -t eport-daemon-rule-engine .
 docker run -p 8080:8080 eport-daemon-rule-engine
 ```
 
-## 📚 项目结构
+## 📚 Project Structure
 
 ```
 eport-daemon-rule-engine/
 ├── src/
 │   ├── main/
-│   │   ├── java/         # Java源代码
-│   │   └── resources/    # 配置文件
+│   │   ├── java/         # Java source code
+│   │   └── resources/    # Configuration files
 │   └── test/
-│       ├── java/         # 测试代码
-│       └── resources/    # 测试配置
-├── Dockerfile            # Docker构建文件
-├── pom.xml               # Maven配置
-└── README.md             # 项目文档
+│       ├── java/         # Test code
+│       └── resources/    # Test configurations
+├── Dockerfile            # Docker build file
+├── pom.xml               # Maven configuration
+└── README.md             # Project documentation
 ```
 
-## 🔧 配置
+## 🔧 Configuration
 
-主要配置文件位于 `src/main/resources/application.yml`。可根据需要调整以下参数：
+The main configuration file is located at `src/main/resources/application.yml`. You can adjust the following parameters as needed:
 
-- 服务器端口
-- 数据库连接
-- 日志级别
-- 规则引擎参数
+- Server port
+- Database connections
+- Log levels
+- Rule engine parameters
 
-## 📈 性能优化
+## 📈 Performance Optimization
 
-系统已针对高吞吐量场景进行了优化：
+The system has been optimized for high-throughput scenarios:
 
-- 高效的规则评估算法
-- 缓存机制减少重复计算
-- 异步处理提高并发能力
+- Efficient rule evaluation algorithms
+- Caching mechanisms to reduce redundant calculations
+- Asynchronous processing to improve concurrency
 
-## 🤝 贡献指南
+## 🤝 Contributing
 
-欢迎贡献代码、报告问题或提出新功能建议！请遵循以下步骤：
+We welcome code contributions, issue reports, or new feature suggestions! Please follow these steps:
 
-1. Fork 项目
-2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'Add some amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 创建 Pull Request
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Create a Pull Request
 
-## 📄 许可证
+## 📄 License
 
-本项目采用 MIT 许可证 - 详情请参阅 [LICENSE](LICENSE) 文件
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
-## 📞 联系方式
+## 📞 Contact
 
-项目维护者 - [@HeyAlaia](https://github.com/HeyAlaia)
-- 个人主页 - [alaiablog](https://alaiablog.pages.dev/)
+Project Maintainer - [@HeyAlaia](https://github.com/HeyAlaia)
+- Personal Homepage - [alaiablog](https://alaiablog.pages.dev/)
 
 ---
 
