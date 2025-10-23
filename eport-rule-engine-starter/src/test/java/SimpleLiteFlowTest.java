@@ -1,18 +1,10 @@
 import com.alibaba.fastjson.JSONObject;
 import com.eport.daemon.rule.EportDaemonRuleEngineApplication;
-import com.eport.daemon.rule.common.EngineSourceType;
-import com.eport.daemon.rule.common.EngineType;
 import com.eport.daemon.rule.common.RuleEngineConfigConsent;
 import com.eport.daemon.rule.engine.RuleEngine;
-import com.eport.daemon.rule.engine.RuleEngineBuilder;
 import com.eport.daemon.rule.liteflow.LiteFlowDefaultComponents;
 import com.eport.daemon.rule.pojo.RuleConfig;
 import com.eport.daemon.rule.utils.RuleEngineHelper;
-import com.yomahub.liteflow.enums.ParseModeEnum;
-import jakarta.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
-
 import liteflow.LiteFlowTestComponents;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
