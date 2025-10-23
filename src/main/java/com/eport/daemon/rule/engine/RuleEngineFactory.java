@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  * @Description: 规则引擎工厂类
  **/
 @Component
-public class RuleEngineFactory {
+public class RuleEngineFactory<T> {
 
     @Lazy
     @Resource
@@ -29,11 +29,11 @@ public class RuleEngineFactory {
     @Resource
     private LocalRuleLoader localRuleLoader;
 
-    public RuleEngine createRuleEngine(EngineType engineType, EngineSourceType engineSourceType) {
+    public RuleEngine<T> createRuleEngine(EngineType engineType, EngineSourceType engineSourceType, Class<?> contextClass) {
         if (Objects.requireNonNull(engineType) == EngineType.DROOLS) {
-            return new DroolsRuleEngine().setRuleLoader(checkSource(engineSourceType));
+            return new DroolsRuleEngine<T>().setRuleLoader(checkSource(engineSourceType));
         } else if (Objects.requireNonNull(engineType) == EngineType.LITEFLOW) {
-            return new LiteFlowRuleEngine().setRuleLoader(checkSource(engineSourceType));
+            return new LiteFlowRuleEngine<T>(contextClass).setRuleLoader(checkSource(engineSourceType));
         }
         throw new IllegalStateException("未知的规则引擎类型, 无法创建.");
     }

@@ -3,26 +3,23 @@ package com.eport.daemon.rule.engine.impl;
 import cn.hutool.core.collection.ListUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.eport.daemon.rule.engine.AbstractRuleEngine;
+import com.eport.daemon.rule.pojo.RuleConfig;
 import com.eport.daemon.rule.pojo.RuleSet;
 import com.eport.daemon.rule.storage.RuleStorage;
-import com.yomahub.liteflow.builder.el.LiteFlowChainELBuilder;
 import com.yomahub.liteflow.core.FlowExecutor;
 import com.yomahub.liteflow.core.FlowExecutorHolder;
+import com.yomahub.liteflow.enums.ParseModeEnum;
 import com.yomahub.liteflow.flow.LiteflowResponse;
 import com.yomahub.liteflow.parser.helper.ParserHelper;
 import com.yomahub.liteflow.property.LiteflowConfig;
 import com.yomahub.liteflow.property.LiteflowConfigGetter;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,15 +27,19 @@ import java.util.concurrent.TimeUnit;
  * @Description: LiteFlowRuleEngine - 基于LiteFlow的规则引擎实现
  **/
 @Slf4j
-@NoArgsConstructor
-public class LiteFlowRuleEngine extends AbstractRuleEngine {
+public class LiteFlowRuleEngine<T> extends AbstractRuleEngine<T> {
 
     private final Set<String> CHAIN_NAME_SET = new HashSet<>();
     private FlowExecutor flowExecutor;
     private LiteflowConfig liteflowConfig;
+    private final Class<?> contextClass;
+
+    public LiteFlowRuleEngine(Class<?> contextClass) {
+        this.contextClass = contextClass;
+    }
 
     @Override
-    public void open(Map<String, Object> config) {
+    public void open(RuleConfig config) {
         RuleStorage storage = getRuleStorage();
         if (flowExecutor != null) {
             throw new IllegalStateException(
@@ -59,8 +60,9 @@ public class LiteFlowRuleEngine extends AbstractRuleEngine {
         log.info("LiteFlow Rule Engine 初始化工作完成.");
     }
 
-    private void initLiteFlowConfig(Map<String, Object> config) {
+    private void initLiteFlowConfig(RuleConfig config) {
         liteflowConfig = LiteflowConfigGetter.get();
+        liteflowConfig.setParseMode(config.getParseModeEnum());
     }
 
     private void createOrUpdate(RuleStorage storage) {
@@ -144,26 +146,26 @@ public class LiteFlowRuleEngine extends AbstractRuleEngine {
     }
 
     @Override
-    public void exec(JSONObject obj) {
+    public void exec(T obj) {
         // 使用决策路由表的方式执行
         flowExecutor.executeRouteChain(obj, JSONObject.class);
     }
 
     @Override
-    public void execute(String chainName, JSONObject obj) {
+    public void execute(String chainName, T obj) {
         if (StringUtils.isNotBlank(chainName)) {
             executeChain(chainName, obj);
         }
     }
 
-    private void executeChain(String chainName, JSONObject obj) {
+    private void executeChain(String chainName, T obj) {
         if (flowExecutor == null) {
             log.error("FlowExecutor未初始化");
             return;
         }
 
         LiteflowResponse liteflowResponse = simulateRuleExecution(chainName, obj);
-        if (!liteflowResponse.isSuccess()){
+        if (!liteflowResponse.isSuccess()) {
             Exception e = liteflowResponse.getCause();
             log.error(
                     "执行规则链 {} 时发生错误: {}",
@@ -174,7 +176,7 @@ public class LiteFlowRuleEngine extends AbstractRuleEngine {
         }
     }
 
-    private LiteflowResponse simulateRuleExecution(String chainName, JSONObject obj) {
-         return flowExecutor.execute2Resp(chainName, obj, JSONObject.class);
+    private LiteflowResponse simulateRuleExecution(String chainName, T obj) {
+        return flowExecutor.execute2Resp(chainName, obj, contextClass);
     }
 }

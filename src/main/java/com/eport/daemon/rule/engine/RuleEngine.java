@@ -1,6 +1,6 @@
 package com.eport.daemon.rule.engine;
 
-import com.alibaba.fastjson.JSONObject;
+import com.eport.daemon.rule.pojo.RuleConfig;
 
 import java.util.Map;
 
@@ -9,16 +9,16 @@ import java.util.Map;
  *
  * @Description: 规则引擎
  **/
-public interface RuleEngine {
+public interface RuleEngine<T> {
 
-    void init(Map<String, Object> config);
+    void init(RuleConfig config);
     void init();
     void start();
 
     void close();
 
-    void execute(JSONObject obj);
+    void execute(T obj);
 
-    void execute(String topic, JSONObject obj);
+    void execute(String topic, T obj);
 
 }

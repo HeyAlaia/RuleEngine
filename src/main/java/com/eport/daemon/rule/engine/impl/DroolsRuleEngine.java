@@ -2,11 +2,9 @@ package com.eport.daemon.rule.engine.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eport.daemon.rule.engine.AbstractRuleEngine;
-import com.eport.daemon.rule.pojo.Rule;
+import com.eport.daemon.rule.pojo.RuleConfig;
 import com.eport.daemon.rule.pojo.RuleSet;
-import com.eport.daemon.rule.storage.RuleLoader;
 import com.eport.daemon.rule.storage.RuleStorage;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -21,9 +19,7 @@ import org.kie.api.builder.model.KieSessionModel;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.conf.ClockTypeOption;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -35,12 +31,12 @@ import java.util.concurrent.TimeUnit;
  **/
 @Slf4j
 @NoArgsConstructor
-public class DroolsRuleEngine extends AbstractRuleEngine {
+public class DroolsRuleEngine<T> extends AbstractRuleEngine<T> {
 
     private final ConcurrentMap<String, KieContainer> kieContainerMap = new ConcurrentHashMap<>();
 
     @Override
-    public void open(Map<String, Object> config) {
+    public void open(RuleConfig config) {
         RuleStorage storage = getRuleStorage();
         if (!kieContainerMap.isEmpty()) {
             throw new IllegalStateException("DroolsRuleEngine已经初始化, 无法再次初始化");
@@ -65,7 +61,7 @@ public class DroolsRuleEngine extends AbstractRuleEngine {
                     try {
                         TimeUnit.SECONDS.sleep(3);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        log.error(e.getMessage(), e);
                     }
                     //这里手动销毁掉
                     oldContainer.dispose();
@@ -121,7 +117,7 @@ public class DroolsRuleEngine extends AbstractRuleEngine {
     }
 
     @Override
-    public void exec(JSONObject obj) {
+    public void exec(T obj) {
         for (String key : kieContainerMap.keySet()) {
             KieContainer kieContainer = kieContainerMap.get(key);
             KieSession kieSession = kieContainer.newKieSession();
@@ -135,7 +131,7 @@ public class DroolsRuleEngine extends AbstractRuleEngine {
     }
 
     @Override
-    public void execute(String topic, JSONObject obj) {
+    public void execute(String topic, T obj) {
         if(StringUtils.isNotBlank(topic)){
             KieContainer kieContainer = kieContainerMap.get(topic);
             KieSession kieSession = kieContainer.newKieSession();
