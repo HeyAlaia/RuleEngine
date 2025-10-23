@@ -15,7 +15,7 @@
 
 ## 📋 概述
 
-Drool Quick Start 是一个基于 Drool\liteflow 规则引擎的快速开始项目。该系统能够根据预定义的规则集自动处理和验证数据流，提高数据处理效率和准确性。
+Rule Engine Quick Start 是一个基于 Drool\liteflow 规则引擎的快速开始项目。该系统能够根据预定义的规则集自动处理和验证数据流，提高数据处理效率和准确性。
 
 ## ✨ 特性
 

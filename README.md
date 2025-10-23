@@ -19,7 +19,7 @@
 
 ## 📋 Overview
 
-Drool Quick Start is a rapid development project based on the Drools/LiteFlow rule engine. This system can automatically process and validate data flows according to predefined rule sets, improving data processing efficiency and accuracy.
+Rule Engine Quick Start is a rapid development project based on the Drools/LiteFlow rule engine. This system can automatically process and validate data flows according to predefined rule sets, improving data processing efficiency and accuracy.
 
 ## ✨ Features
 
