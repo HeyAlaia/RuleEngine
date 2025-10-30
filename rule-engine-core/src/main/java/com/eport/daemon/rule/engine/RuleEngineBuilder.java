@@ -23,9 +23,9 @@ public class RuleEngineBuilder<T> {
     private EngineSourceType engineSourceType;
     private ReloadWatcher reloadWatcher;
     private boolean initialize;
-    private Class<?> contextClass;
+    private Class<?>[] contextClass;
 
-    public RuleEngineBuilder<T> builder(){
+    public RuleEngineBuilder<T> builder() {
         return this;
     }
 
@@ -54,7 +54,7 @@ public class RuleEngineBuilder<T> {
         return this;
     }
 
-    public RuleEngineBuilder<T> context(Class<?> contextClass) {
+    public RuleEngineBuilder<T> context(Class<?>... contextClass) {
         this.contextClass = contextClass;
         return this;
     }
@@ -63,7 +63,7 @@ public class RuleEngineBuilder<T> {
         AbstractRuleEngine<T> ruleEngine = (AbstractRuleEngine<T>) ruleEngineFactory.createRuleEngine(engineType, engineSourceType, contextClass);
         ruleEngine.setConfig(config);
         ruleEngine.setReloadWatcher(reloadWatcher);
-        if(initialize){
+        if (initialize) {
             ruleEngine.init();
         }
         return ruleEngine;

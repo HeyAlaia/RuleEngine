@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 public enum EngineSourceType {
     REDIS,
+    DATABASE,
     LOCAL;
 
     public static String fromString(EngineSourceType engineSourceType) {

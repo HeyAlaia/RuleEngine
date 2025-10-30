@@ -1,8 +1,10 @@
 package com.eport.daemon.rule.engine.impl;
 
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.eport.daemon.rule.engine.AbstractRuleEngine;
+import com.eport.daemon.rule.exception.BusinessLiteFlowException;
 import com.eport.daemon.rule.pojo.RuleConfig;
 import com.eport.daemon.rule.pojo.RuleSet;
 import com.eport.daemon.rule.storage.RuleStorage;
@@ -13,6 +15,7 @@ import com.yomahub.liteflow.flow.LiteflowResponse;
 import com.yomahub.liteflow.parser.helper.ParserHelper;
 import com.yomahub.liteflow.property.LiteflowConfig;
 import com.yomahub.liteflow.property.LiteflowConfigGetter;
+import com.yomahub.liteflow.slot.Slot;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
@@ -32,9 +35,9 @@ public class LiteFlowRuleEngine<T> extends AbstractRuleEngine<T> {
     private final Set<String> CHAIN_NAME_SET = new HashSet<>();
     private FlowExecutor flowExecutor;
     private LiteflowConfig liteflowConfig;
-    private final Class<?> contextClass;
+    private final Class<?>[] contextClass;
 
-    public LiteFlowRuleEngine(Class<?> contextClass) {
+    public LiteFlowRuleEngine(Class<?>... contextClass) {
         this.contextClass = contextClass;
     }
 
@@ -166,13 +169,18 @@ public class LiteFlowRuleEngine<T> extends AbstractRuleEngine<T> {
 
         LiteflowResponse liteflowResponse = simulateRuleExecution(chainName, obj);
         if (!liteflowResponse.isSuccess()) {
-            Exception e = liteflowResponse.getCause();
+            String code = liteflowResponse.getCode();
+            String message = liteflowResponse.getMessage();
             log.error(
-                    "执行规则链 {} 时发生错误: {}",
+                    "统一执行器错误日志打印: 执行规则链 {} 时发生错误, 自定义错误编码是: {}, 自定义错误内容是: {}",
                     chainName,
-                    e.getMessage(),
-                    e
+                    code,
+                    message
             );
+            String chainId = liteflowResponse.getChainId();
+            String requestId = liteflowResponse.getSlot().getRequestId();
+            String executeStepStrWithTime = liteflowResponse.getExecuteStepStrWithTime();
+            throw new BusinessLiteFlowException(Optional.ofNullable(code).orElse("9999"), StrUtil.format("流程调用异常, 请查看调用链<{}>, 请查看流程id<{}>, 查看流程: {}", chainId, requestId, executeStepStrWithTime));
         }
     }
 

@@ -5,6 +5,7 @@ import com.eport.daemon.rule.common.EngineType;
 import com.eport.daemon.rule.engine.impl.DroolsRuleEngine;
 import com.eport.daemon.rule.engine.impl.LiteFlowRuleEngine;
 import com.eport.daemon.rule.storage.RuleLoader;
+import com.eport.daemon.rule.storage.impl.DatabaseRuleLoader;
 import com.eport.daemon.rule.storage.impl.LocalRuleLoader;
 import com.eport.daemon.rule.storage.impl.RedisRuleLoader;
 import jakarta.annotation.Resource;
@@ -29,7 +30,11 @@ public class RuleEngineFactory<T> {
     @Resource
     private LocalRuleLoader localRuleLoader;
 
-    public RuleEngine<T> createRuleEngine(EngineType engineType, EngineSourceType engineSourceType, Class<?> contextClass) {
+    @Lazy
+    @Resource
+    private DatabaseRuleLoader databaseRuleLoader;
+
+    public RuleEngine<T> createRuleEngine(EngineType engineType, EngineSourceType engineSourceType, Class<?>... contextClass) {
         if (Objects.requireNonNull(engineType) == EngineType.DROOLS) {
             return new DroolsRuleEngine<T>().setRuleLoader(checkSource(engineSourceType));
         } else if (Objects.requireNonNull(engineType) == EngineType.LITEFLOW) {
@@ -43,6 +48,8 @@ public class RuleEngineFactory<T> {
             return redisRuleLoader;
         } else if (Objects.requireNonNull(engineSourceType) == EngineSourceType.LOCAL) {
             return localRuleLoader;
+        } else if (Objects.requireNonNull(engineSourceType) == EngineSourceType.DATABASE) {
+            return databaseRuleLoader;
         }
         throw new IllegalStateException("未知的规则引擎加载类型, 无法创建.");
     }
