@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow>
+    <!-- 主流程：判断旅客是否存在 -->
+    <chain name="enterTraveler">
+        IF(ObtainTravelerInfo, existTraveler, unexistTraveler)
+    </chain>
+
+    <!-- 已存在旅客的流程 -->
+    <chain name="existTraveler">
+        THEN(
+            IF(CheckBlacklist, PassageFail),
+            IF(CheckWriteOff, PassageFail),
+            IF(CheckPassage, afterProcessTraveler, PassageFail)
+        )
+    </chain>
+
+    <!-- 不存在旅客的流程 -->
+    <chain name="unexistTraveler">
+        THEN(
+            CreateTravelerInfo,
+            IF(CheckPassage, afterProcessTraveler, PassageFail)
+        )
+    </chain>
+
+    <!-- 通行后的处理流程 -->
+    <chain name="afterProcessTraveler">
+        THEN(
+            IF(CheckKeyPerson, CreateTravelerWarnInfo),
+            PassageSuccess
+        )
+    </chain>
+</flow>

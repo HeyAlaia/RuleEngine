@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow>
+    <chain name="outTraveler">
+        THEN(
+            IF(
+                ObtainTravelerInfo,
+                IF(
+                    alreadyEnter,
+                    IF(
+                        CheckPassage,
+                        checkChain
+                    )
+                )
+            ),
+            PassageFail
+        )
+    </chain>
+
+    <chain name="checkChain">
+        THEN(
+            IF(
+                checkGoods,
+                goodsProcess
+            ),
+            checkHasWarnInfo,
+            IF(
+                CheckKeyPerson,
+                keyPersonProcess
+            ),
+            CheckRandomParams,
+            checkHasWarnInfo,
+            PassageSuccess
+        )
+    </chain>
+
+    <chain name="keyPersonProcess">
+        THEN(CheckKeyPersonParams, checkHasWarnInfo)
+    </chain>
+
+    <chain name="checkHasWarnInfo">
+        IF(HasWarnInfo,PassageFail)
+    </chain>
+
+    <chain name="goodsProcess">
+        THEN(
+            checkAmount,
+            checkSpecialGoods,
+            checkOtherGoods
+        )
+    </chain>
+</flow>

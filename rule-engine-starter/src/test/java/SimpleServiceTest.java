@@ -1,20 +1,14 @@
 import com.alibaba.fastjson.JSONObject;
-import com.eport.daemon.rule.EportDaemonRuleEngineApplication;
+import com.eport.rule.EportDaemonRuleEngineApplication;
 import com.eport.daemon.rule.common.EngineSourceType;
 import com.eport.daemon.rule.common.EngineType;
-import com.eport.daemon.rule.common.RuleEngineConfigConsent;
 import com.eport.daemon.rule.engine.RuleEngine;
-import com.eport.daemon.rule.engine.RuleEngineBuilder;
 import com.eport.daemon.rule.pojo.RuleConfig;
 import com.eport.daemon.rule.utils.RuleEngineHelper;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @SpringBootTest(classes = EportDaemonRuleEngineApplication.class)
