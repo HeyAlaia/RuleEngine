@@ -6,6 +6,15 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import ElementPlus from 'unplugin-element-plus/vite'
+import { resolve } from 'path';
+
+const pathResolve = (dir: string) => {
+	return resolve(__dirname, '.', dir);
+};
+
+const alias: Record<string, string> = {
+	'/@': pathResolve('./src/')
+};
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -39,12 +48,5 @@ export default defineConfig({
       }
     },
   },
-  resolve: {
-    // 导入以下文件可以不用后缀名
-    extensions: ['.vue', '.ts'],
-    // 配置路径别名
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  },
+  resolve: { alias },
 })

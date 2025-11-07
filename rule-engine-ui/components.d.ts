@@ -20,10 +20,12 @@ declare module 'vue' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     JsonViewer: typeof import('./src/components/json-viewer/index.vue')['default']
+    Node: typeof import('./src/components/antvX6/node/node.vue')['default']
     OpenBrowser: typeof import('./src/components/liteflow/playwright/OpenBrowser.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SpringExpression: typeof import('./src/components/liteflow/spring/SpringExpression.vue')['default']
+    Tag: typeof import('./src/components/antvX6/node/tag/tag.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
